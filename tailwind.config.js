@@ -10,7 +10,7 @@ export default {
         '102': '1.02',
       },
       fontFamily: {
-        'runescape': ['RuneScape', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        'quest': ['ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
       },
       animation: {
         'quest-complete': 'questComplete 2s infinite',

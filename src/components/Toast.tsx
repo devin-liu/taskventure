@@ -34,7 +34,7 @@ export const Toast = ({ message, type, onClose }: ToastProps) => {
         rounded-lg shadow-lg overflow-hidden
         ${getToastStyles()}
       `}>
-        <div className="px-4 py-3 font-runescape">
+        <div className="px-4 py-3 font-quest">
           {message}
         </div>
       </div>
