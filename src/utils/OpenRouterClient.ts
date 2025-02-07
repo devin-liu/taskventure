@@ -50,7 +50,7 @@ Mission: [Fun Startup-Themed Title]
         'X-Title': 'Taskventure'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-r1:free',
+        model: 'openai/o1-mini',
         messages: [systemMessage, userPrompt],
         temperature: 0.9,
         max_tokens: 2000,
