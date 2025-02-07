@@ -5,6 +5,7 @@ import { Toast } from './components/Toast'
 import { parseSteps } from './utils/StepParser'
 import { generateGameQuests } from './utils/OpenRouterClient'
 import { useApiKeys } from './hooks/useApiKeys'
+import { useQuestStorage } from './hooks/useQuestStorage'
 import type { QuestStep } from './utils/StepParser'
 
 const STORAGE_KEY = 'taskventure_api_keys';
@@ -16,10 +17,10 @@ interface ToastState {
 
 function App() {
   const [input, setInput] = useState('')
-  const [quests, setQuests] = useState<QuestStep[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [toast, setToast] = useState<ToastState | null>(null)
   const { apiKeys, hasKeys, isModalOpen, openModal, closeModal, handleSaveKeys } = useApiKeys()
+  const { quests, setQuests, questCompletion, saveQuestCompletion } = useQuestStorage()
 
   const showToast = (message: string, type: ToastState['type']) => {
     setToast({ message, type });
@@ -44,7 +45,13 @@ function App() {
       setIsLoading(true)
       const gamifiedQuests = await generateGameQuests(input)
       const parsedQuests = parseSteps(gamifiedQuests)
-      setQuests(parsedQuests)
+      
+      // Add new quests to existing ones
+      const updatedQuests = [...quests, ...parsedQuests];
+      setQuests(updatedQuests);
+      
+      // Clear input after successful generation
+      setInput('');
       showToast('Successfully generated your epic quests!', 'success');
     } catch (error) {
       console.error('Failed to generate quests:', error)
@@ -53,6 +60,20 @@ function App() {
       setIsLoading(false)
     }
   }
+
+  const handleTaskToggle = (questIndex: number, taskIndex: number) => {
+    const questId = `quest-${questIndex}`;
+    const currentCompleted = questCompletion[questId] || new Set();
+    const newCompleted = new Set(currentCompleted);
+
+    if (newCompleted.has(taskIndex)) {
+      newCompleted.delete(taskIndex);
+    } else {
+      newCompleted.add(taskIndex);
+    }
+
+    saveQuestCompletion(questId, newCompleted);
+  };
 
   return (
     <div className="min-h-screen bg-parchment-100 dark:bg-gray-900">
@@ -116,7 +137,13 @@ function App() {
         {/* Quest List */}
         <div className="space-y-6">
           {quests.map((quest, index) => (
-            <QuestCard key={index} quest={quest} index={index} />
+            <QuestCard 
+              key={index} 
+              quest={quest} 
+              index={index}
+              completedTasks={questCompletion[`quest-${index}`] || new Set()}
+              onTaskToggle={(taskIndex) => handleTaskToggle(index, taskIndex)}
+            />
           ))}
         </div>
       </main>

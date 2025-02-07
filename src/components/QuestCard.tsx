@@ -1,24 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { QuestStep } from '../utils/StepParser';
 
 interface QuestCardProps {
   quest: QuestStep;
   index: number;
+  completedTasks: Set<number>;
+  onTaskToggle: (taskIndex: number) => void;
 }
 
-export const QuestCard = ({ quest, index }: QuestCardProps) => {
-  const [completedTasks, setCompletedTasks] = useState<Set<number>>(new Set());
+export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestCardProps) => {
   const progress = (completedTasks.size / quest.tasks.length) * 100;
-
-  const toggleTask = (taskIndex: number) => {
-    const newCompletedTasks = new Set(completedTasks);
-    if (completedTasks.has(taskIndex)) {
-      newCompletedTasks.delete(taskIndex);
-    } else {
-      newCompletedTasks.add(taskIndex);
-    }
-    setCompletedTasks(newCompletedTasks);
-  };
 
   return (
     <div className="relative bg-parchment-50 dark:bg-gray-800 rounded-lg overflow-hidden border border-amber-200/50 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
@@ -47,7 +38,7 @@ export const QuestCard = ({ quest, index }: QuestCardProps) => {
           {quest.tasks.map((task, taskIndex) => (
             <li 
               key={taskIndex}
-              onClick={() => toggleTask(taskIndex)}
+              onClick={() => onTaskToggle(taskIndex)}
               className="flex items-start space-x-3 group cursor-pointer"
             >
               {/* RuneScape-style Checkbox */}
