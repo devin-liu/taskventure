@@ -42,9 +42,7 @@ function App() {
 
     try {
       setIsLoading(true)
-      // Generate gamified quests from plain text input
       const gamifiedQuests = await generateGameQuests(input)
-      // Parse the generated quest steps
       const parsedQuests = parseSteps(gamifiedQuests)
       setQuests(parsedQuests)
       showToast('Successfully generated your epic quests!', 'success');
@@ -57,50 +55,71 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
-            Taskventure
-          </h1>
-          <button
-            onClick={openModal}
-            className="text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
-          >
-            Configure API Keys
-          </button>
+    <div className="min-h-screen bg-parchment-100 dark:bg-gray-900">
+      {/* RuneScape-style Header */}
+      <div className="bg-gradient-to-b from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 py-4 px-4 shadow-md border-b-4 border-amber-700/50">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <img src="/scroll.svg" alt="Scroll" className="w-8 h-8" />
+              <h1 className="font-runescape text-3xl text-black dark:text-white">
+                Taskventure
+              </h1>
+            </div>
+            <button
+              onClick={openModal}
+              className="bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 text-black dark:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+            >
+              Configure API Key
+            </button>
+          </div>
         </div>
-        
-        <div className="mb-8">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Enter your tasks in plain text. We'll transform them into epic startup quests!"
-            className="w-full h-48 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          />
-          <button
-            onClick={handleLaunchQuest}
-            disabled={isLoading}
-            className={`mt-4 w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${
-              isLoading 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-            }`}
-          >
-            {isLoading 
-              ? 'Generating Epic Quests...' 
-              : hasKeys 
-                ? 'Transform into Quests' 
-                : 'Configure API Keys to Start'}
-          </button>
+      </div>
+
+      <main className="max-w-3xl mx-auto py-8 px-4">
+        {/* Input Area */}
+        <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-amber-200/50 dark:border-gray-700 shadow-sm">
+          <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 py-2 px-4 border-b border-amber-600/50">
+            <h2 className="font-runescape text-black text-lg">New Quest</h2>
+          </div>
+          
+          <div className="p-4">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Enter your tasks in plain text. We'll transform them into epic quests!"
+              className="w-full h-32 p-4 rounded-lg bg-parchment-50 dark:bg-gray-900 text-amber-900 dark:text-amber-100 border border-amber-200/50 dark:border-gray-700 focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none transition-all duration-200 placeholder-amber-700/50 dark:placeholder-amber-400/50"
+            />
+            <button
+              onClick={handleLaunchQuest}
+              disabled={isLoading}
+              className={`
+                mt-4 w-full py-3 px-6 rounded-lg font-runescape text-base
+                transition-all duration-200
+                ${isLoading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : hasKeys 
+                    ? 'bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-600 text-black shadow-sm hover:shadow' 
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                }
+              `}
+            >
+              {isLoading 
+                ? 'Summoning Epic Quests...' 
+                : hasKeys 
+                  ? 'Begin Your Quest' 
+                  : 'Configure API Key to Begin Your Journey'}
+            </button>
+          </div>
         </div>
 
+        {/* Quest List */}
         <div className="space-y-6">
           {quests.map((quest, index) => (
             <QuestCard key={index} quest={quest} index={index} />
           ))}
         </div>
-      </div>
+      </main>
 
       <ApiKeyModal
         isOpen={isModalOpen}

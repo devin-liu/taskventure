@@ -1,0 +1,92 @@
+/* RuneScape-inspired Font */
+@font-face {
+  font-family: 'RuneScape';
+  src: url('https://cdn.jsdelivr.net/gh/JoshKina/RuneScape-Font@1.0/RuneScape-Font.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-runescape {
+  font-family: 'RuneScape', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* Quest Completion Animation */
+@keyframes questComplete {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-quest-complete {
+  animation: questComplete 2s infinite;
+}
+
+/* Hover Effects */
+.hover-quest-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-quest-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Linear App-inspired Smooth Transitions */
+.linear-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+/* Quest Badge Glow */
+.quest-badge {
+  position: relative;
+}
+
+.quest-badge::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b, #fbbf24);
+  filter: blur(4px);
+  opacity: 0.5;
+  z-index: -1;
+  border-radius: 9999px;
+  animation: badgeGlow 2s infinite;
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
