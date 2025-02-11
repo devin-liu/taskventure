@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { QuestCard } from './components/QuestCard'
 import { QuestInput } from './components/QuestInput'
 import { QuestView } from './components/QuestView'
 import { ApiKeyModal } from './components/ApiKeyModal'
 import { Toast } from './components/Toast'
+import { XPTracker } from './components/XPTracker'
 import { parseSteps } from './utils/StepParser'
 import { generateGameQuests } from './utils/OpenRouterClient'
 import { useApiKeys } from './hooks/useApiKeys'
 import { useQuestStorage } from './hooks/useQuestStorage'
+import { XPProvider } from './hooks/useXPTracker.tsx'
 import type { QuestStep } from './utils/StepParser'
 
 const STORAGE_KEY = 'taskventure_api_keys';
+const CURRENT_QUEST_INDEX_KEY = 'taskventure_current_quest_index';
 
 interface ToastState {
   message: string;
@@ -28,7 +31,22 @@ function App() {
   
   // Initialize view state based on whether there are existing quests
   const [viewState, setViewState] = useState<ViewState>(quests.length > 0 ? 'quest' : 'input')
-  const [currentQuestIndex, setCurrentQuestIndex] = useState(0)
+  
+  // Initialize currentQuestIndex from localStorage or default to 0
+  const [currentQuestIndex, setCurrentQuestIndex] = useState(() => {
+    const saved = localStorage.getItem(CURRENT_QUEST_INDEX_KEY);
+    if (saved !== null) {
+      const index = parseInt(saved, 10);
+      // Ensure the loaded index is valid
+      return index < quests.length ? index : 0;
+    }
+    return 0;
+  });
+
+  // Save currentQuestIndex to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(CURRENT_QUEST_INDEX_KEY, currentQuestIndex.toString());
+  }, [currentQuestIndex]);
 
   const showToast = (message: string, type: ToastState['type']) => {
     setToast({ message, type });
@@ -88,87 +106,55 @@ function App() {
     }
   };
 
-  const handlePreviousQuest = () => {
-    if (currentQuestIndex > 0) {
-      setCurrentQuestIndex(currentQuestIndex - 1);
-    }
-  };
-
   const handleNewQuest = () => {
     setViewState('input');
     setInput('');
   };
 
   return (
-    <div className="min-h-screen w-full bg-parchment-100 dark:bg-gray-900">
-      {/* App Header */}
-      <div className="bg-gradient-to-b from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 py-4 px-4 shadow-md border-b-4 border-amber-700/50">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <img src="/scroll.svg" alt="Scroll" className="w-8 h-8" />
-              <h1 className="font-quest text-3xl text-black dark:text-white">
-                Taskventure
-              </h1>
-            </div>
-            <button
-              onClick={openModal}
-              className="bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 text-black dark:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-            >
-              Configure API Key
-            </button>
-          </div>
+    <XPProvider>
+      <div className="min-h-screen bg-amber-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <div className="container mx-auto py-8 px-4">
+          <header className="text-center mb-8">
+            <h1 className="text-4xl font-quest text-amber-900 dark:text-amber-400">
+              TaskVenture
+            </h1>
+          </header>
+
+          {viewState === 'input' ? (
+            <QuestInput
+              input={input}
+              setInput={setInput}
+              onSubmit={handleLaunchQuest}
+              isLoading={isLoading}
+            />
+          ) : (
+            <QuestView
+              quests={quests}
+              currentQuestIndex={currentQuestIndex}
+              questCompletion={questCompletion}
+              onTaskToggle={handleTaskToggle}
+              onNewQuest={handleNewQuest}
+              onNext={handleNextQuest}
+            />
+          )}
         </div>
-      </div>
 
-      <main className="max-w-3xl mx-auto py-8 px-4">
-        {viewState === 'input' ? (
-          <QuestInput
-            input={input}
-            onInputChange={setInput}
-            onSubmit={handleLaunchQuest}
-            isLoading={isLoading}
-            hasKeys={hasKeys}
-          />
-        ) : quests.length > 0 ? (
-          <QuestView
-            quests={quests}
-            currentQuestIndex={currentQuestIndex}
-            questCompletion={questCompletion}
-            onTaskToggle={handleTaskToggle}
-            onNext={handleNextQuest}
-            onPrevious={handlePreviousQuest}
-            onNewQuest={handleNewQuest}
-          />
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-amber-900/70 dark:text-amber-100/70">
-              No quests available. Start your adventure by creating a new quest!
-            </p>
-            <button
-              onClick={handleNewQuest}
-              className="mt-4 px-6 py-2 bg-amber-500/10 text-amber-900 hover:bg-amber-500/20 rounded-lg font-quest transition-colors duration-200"
-            >
-              Create New Quest
-            </button>
-          </div>
-        )}
-      </main>
-
-      <ApiKeyModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSave={handleSaveKeys}
-      />
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
+        <XPTracker />
+        <ApiKeyModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSave={handleSaveKeys}
         />
-      )}
-    </div>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+      </div>
+    </XPProvider>
   )
 }
 

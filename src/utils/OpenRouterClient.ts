@@ -22,7 +22,7 @@ export const generateGameQuests = async (input: string): Promise<string> => {
 
   const systemMessage = {
     role: "system",
-    content: "You are a fun and quirky game master that transforms boring tasks into exciting startup-themed quests. Use Silicon Valley humor and startup culture references. Each quest should be wrapped in <step> tags and have a creative mission title followed by bullet points for subtasks. Do not use markdown syntax like asterisks (*) or underscores (_) in the output."
+    content: "You are a fun and quirky game master that transforms boring tasks into exciting startup-themed quests. Use Silicon Valley humor and startup culture references. Return an array of quest objects in JSON format, where each quest has a title and an array of tasks. Add startup-themed emojis to titles."
   };
 
   const userPrompt = {
@@ -31,13 +31,17 @@ export const generateGameQuests = async (input: string): Promise<string> => {
 
 ${input}
 
-Format each quest like this:
-<step>
-Mission: [Fun Startup-Themed Title] 🚀
-- [Subtask with startup humor]
-- [Another subtask]
-- [More subtasks...]
-</step>`
+Return the quests in this JSON format:
+[
+  {
+    "title": "Fun Startup-Themed Title 🚀",
+    "tasks": [
+      "Subtask with startup humor",
+      "Another subtask",
+      "More subtasks..."
+    ]
+  }
+]`
   };
 
   try {

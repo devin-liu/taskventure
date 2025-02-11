@@ -4,6 +4,8 @@ export interface QuestStep {
   xp?: number;
   difficulty?: 'Intern' | 'Junior Dev' | 'Senior Dev' | 'Tech Lead' | 'Unicorn Status';
   questType?: 'Feature Quest' | 'Bug Hunt' | 'Refactor Mission' | 'DevOps Adventure' | 'Growth Hack';
+  taskId?: string; // Group identifier for related quests
+  timestamp?: number; // When the quest group was created
 }
 
 const generateQuestMetadata = (title: string): Pick<QuestStep, 'xp' | 'difficulty' | 'questType'> => {
@@ -50,31 +52,21 @@ const generateQuestMetadata = (title: string): Pick<QuestStep, 'xp' | 'difficult
   return { xp, difficulty, questType };
 }
 
-export const parseSteps = (input: string): QuestStep[] => {
-  const stepRegex = /<step>([\s\S]*?)<\/step>/g;
-  const steps: QuestStep[] = [];
-  let match;
+export function parseSteps(input: string): QuestStep[] {
+  // Clean up markdown code blocks and any other formatting
+  const cleanInput = input
+    .replace(/```json\n/g, '') // Remove opening ```json
+    .replace(/```\n?/g, '')    // Remove closing ```
+    .trim();                   // Remove extra whitespace
 
-  while ((match = stepRegex.exec(input)) !== null) {
-    const content = match[1].trim();
-    const lines = content.split('\n').map(line => line.trim()).filter(line => line);
-    
-    if (lines.length === 0) continue;
-
-    // First non-empty line is the title
-    const title = lines[0];
-    // Remaining lines are tasks
-    const tasks = lines.slice(1).map(task => task.startsWith('- ') ? task.slice(2) : task);
-
-    // Generate quest metadata
-    const metadata = generateQuestMetadata(title);
-
-    steps.push({
-      title,
-      tasks,
-      ...metadata
-    });
-  }
-
-  return steps;
-};
+  const steps = JSON.parse(cleanInput) as QuestStep[];
+  const taskId = crypto.randomUUID();
+  const timestamp = Date.now();
+  
+  // Add taskId and timestamp to each quest in the group
+  return steps.map(step => ({
+    ...step,
+    taskId,
+    timestamp
+  }));
+}
