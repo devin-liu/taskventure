@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { QuestStep } from '../utils/StepParser';
+import { QuestRewards } from './QuestRewards';
 
 interface QuestCardProps {
   quest: QuestStep;
@@ -10,6 +11,13 @@ interface QuestCardProps {
 
 export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestCardProps) => {
   const progress = (completedTasks.size / quest.tasks.length) * 100;
+  const [showRewards, setShowRewards] = useState(false);
+
+  useEffect(() => {
+    if (progress === 100) {
+      setShowRewards(true);
+    }
+  }, [progress]);
 
   return (
     <div className="relative bg-parchment-50 dark:bg-gray-800 rounded-lg overflow-hidden border border-amber-200/50 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
@@ -60,6 +68,7 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestC
           </div>
         )}
       </div>
+      <QuestRewards show={showRewards} onClose={() => setShowRewards(false)} />
     </div>
   );
 };
