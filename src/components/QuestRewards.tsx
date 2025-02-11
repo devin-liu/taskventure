@@ -5,9 +5,11 @@ interface QuestRewardsProps {
   show: boolean;
   onClose: () => void;
   questTitle: string;
+  onNext?: () => void;
+  isLastQuest?: boolean;
 }
 
-export const QuestRewards = ({ show, onClose, questTitle }: QuestRewardsProps) => {
+export const QuestRewards = ({ show, onClose, questTitle, onNext, isLastQuest = false }: QuestRewardsProps) => {
   const [showReward, setShowReward] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const [isCountingComplete, setIsCountingComplete] = useState(false);
@@ -16,8 +18,8 @@ export const QuestRewards = ({ show, onClose, questTitle }: QuestRewardsProps) =
   const targetXP = Math.floor(Math.random() * 50) + 50; // Random XP between 50-100
   const hasAddedXP = useRef(false);
 
-  const startFadeOut = useCallback(() => {
-    if (!isCountingComplete) return; // Only allow dismissal after counting is complete
+  const startFadeOut = useCallback((force: boolean = false) => {
+    if (!force && !isCountingComplete) return; // Only allow auto-dismiss after counting is complete
     if (isFading) return; // Prevent multiple fade-outs
     
     setIsFading(true);
@@ -31,7 +33,7 @@ export const QuestRewards = ({ show, onClose, questTitle }: QuestRewardsProps) =
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        startFadeOut();
+        startFadeOut(true); // Force close on ESC
       }
     };
 
@@ -107,15 +109,13 @@ export const QuestRewards = ({ show, onClose, questTitle }: QuestRewardsProps) =
             <h3 className="font-quest text-2xl text-amber-900 dark:text-amber-400">
               Quest Rewards!
             </h3>
-            {isCountingComplete && (
-              <button
-                onClick={startFadeOut}
-                className="text-amber-900/50 dark:text-amber-400/50 hover:text-amber-900 dark:hover:text-amber-400 transition-colors"
-                aria-label="Close rewards"
-              >
-                ✕
-              </button>
-            )}
+            <button
+              onClick={() => startFadeOut(true)} // Force close on button click
+              className="text-amber-900/50 dark:text-amber-400/50 hover:text-amber-900 dark:hover:text-amber-400 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5"
+              aria-label="Close rewards"
+            >
+              ✕
+            </button>
           </div>
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
@@ -139,8 +139,21 @@ export const QuestRewards = ({ show, onClose, questTitle }: QuestRewardsProps) =
               </div>
             </div>
             {isCountingComplete && (
-              <div className="text-sm text-amber-900/70 dark:text-amber-400/70">
-                Click anywhere or press ESC to close
+              <div className="flex flex-col items-center gap-3">
+                {!isLastQuest && onNext && (
+                  <button
+                    onClick={() => {
+                      onNext();
+                      startFadeOut(true); // Force close on next quest
+                    }}
+                    className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black px-6 py-2 rounded-full text-sm font-quest hover:from-amber-600 hover:via-yellow-600 hover:to-amber-600 transition-colors duration-200"
+                  >
+                    Continue to Next Quest
+                  </button>
+                )}
+                <div className="text-sm text-amber-900/70 dark:text-amber-400/70">
+                  {isLastQuest ? "You've completed all quests!" : "Press ESC to close"}
+                </div>
               </div>
             )}
           </div>

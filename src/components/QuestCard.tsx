@@ -7,17 +7,21 @@ interface QuestCardProps {
   index: number;
   completedTasks: Set<number>;
   onTaskToggle: (taskIndex: number) => void;
+  onNext?: () => void;
+  isLastQuest?: boolean;
 }
 
-export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestCardProps) => {
+export const QuestCard = ({ quest, index, completedTasks, onTaskToggle, onNext, isLastQuest = false }: QuestCardProps) => {
   const progress = (completedTasks.size / quest.tasks.length) * 100;
   const [showRewards, setShowRewards] = useState(false);
   const isInitialRender = useRef(true);
+  const hasShownRewardsForCompletion = useRef(false);
 
   useEffect(() => {
     // Only show rewards if this isn't the initial render and progress just hit 100%
-    if (!isInitialRender.current && progress === 100) {
+    if (!isInitialRender.current && progress === 100 && !hasShownRewardsForCompletion.current) {
       setShowRewards(true);
+      hasShownRewardsForCompletion.current = true;
     }
     
     // After initial render, mark it as done
@@ -25,9 +29,10 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestC
       isInitialRender.current = false;
     }
 
-    // Reset rewards state when progress changes to non-100%
+    // Reset rewards state and tracking when progress changes to non-100%
     if (progress !== 100) {
       setShowRewards(false);
+      hasShownRewardsForCompletion.current = false;
     }
   }, [progress]);
 
@@ -84,6 +89,8 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestC
         show={showRewards} 
         onClose={() => setShowRewards(false)} 
         questTitle={quest.title}
+        onNext={onNext}
+        isLastQuest={isLastQuest}
       />
     </div>
   );
