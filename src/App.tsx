@@ -112,11 +112,13 @@ export default function App() {
   return (
     <XPProvider>
       <div className="min-h-screen bg-amber-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        {/* XP Tracker */}
+        <XPTracker />
+        
         {/* Header */}
         <header className="border-b border-amber-100 dark:border-gray-800 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
             <TaskVentureLogo width={32} height={32} className="hover:animate-logo-float" />
-            <XPTracker />
           </div>
         </header>
 

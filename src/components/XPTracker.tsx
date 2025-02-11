@@ -10,7 +10,7 @@ export const XPTracker = () => {
       {/* Persistent XP Indicator */}
       <div 
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 flex items-center gap-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 px-4 py-2 rounded-full cursor-pointer hover:scale-105 transition-transform shadow-lg"
+        className="fixed top-4 right-4 flex items-center gap-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 px-4 py-2 rounded-full cursor-pointer hover:scale-105 transition-transform shadow-lg z-[40] isolate"
       >
         <div className="flex flex-col items-end">
           <span className="text-black font-quest text-sm">Level {currentLevel}</span>
