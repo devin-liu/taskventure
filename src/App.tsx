@@ -122,9 +122,12 @@ export default function App() {
 
         <div className="container mx-auto py-8 px-4">
           <header className="text-center mb-8">
-            <h1 className="text-4xl font-quest text-amber-900 dark:text-amber-400">
+            <h1 className="text-3xl font-pixel text-amber-900 dark:text-amber-400 mb-2">
               TaskVenture
             </h1>
+            <p className="text-sm text-amber-800/80 dark:text-amber-400/80">
+              Transform your coding tasks into epic quests
+            </p>
           </header>
 
           {viewState === 'input' ? (
