@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sword blade -->
+  <path d="M16 4L19 16H13L16 4Z" fill="#F59E0B"/>
+  
+  <!-- Sword handle -->
+  <rect x="15" y="16" width="2" height="8" fill="#1F2937"/>
+  
+  <!-- Sword guard -->
+  <rect x="12" y="16" width="8" height="1.5" fill="#1F2937"/>
+  
+  <!-- Brackets -->
+  <path d="M10 10L7 16L10 22" stroke="#1F2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M22 10L25 16L22 22" stroke="#1F2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
