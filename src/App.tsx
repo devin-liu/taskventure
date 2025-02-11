@@ -35,11 +35,7 @@ function App() {
   };
 
   const handleLaunchQuest = async () => {
-    const savedKeys = localStorage.getItem(STORAGE_KEY);
-    const apiKey = savedKeys ? JSON.parse(savedKeys).NEXT_PUBLIC_OPENROUTER_API_KEY : null;
-    
-    if (!apiKey) {
-      showToast('Please configure your OpenRouter API key first', 'error');
+    if (!hasKeys) {
       openModal();
       return;
     }
