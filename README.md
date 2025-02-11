@@ -1,50 +1,80 @@
-# React + TypeScript + Vite
+# Taskventure 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Transform your boring tasks into exciting startup-themed quests! Taskventure is a fun and interactive task management application that uses AI to turn mundane tasks into epic startup adventures.
 
-Currently, two official plugins are available:
+## Features ✨
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **AI-Powered Quest Generation**: Convert regular tasks into startup-themed quests using OpenRouter AI
+- **Interactive Quest System**: Track your progress with an engaging quest-like interface
+- **Dark Mode Support**: Built-in dark mode for late-night questing
+- **Progress Tracking**: Monitor your quest completion with visual indicators
+- **Local Storage**: Your quests and progress are automatically saved locally
+- **Responsive Design**: Works seamlessly on both desktop and mobile devices
 
-## Expanding the ESLint configuration
+## Tech Stack 🛠️
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: React 19 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **AI Integration**: OpenRouter API
+- **State Management**: React Hooks with Local Storage
+- **Code Quality**: ESLint
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started 🏁
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/devin-liu/taskventure.git
+   cd taskventure
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+3. Set up your OpenRouter API key:
+   - Sign up at [OpenRouter](https://openrouter.ai/)
+   - Get your API key
+   - Add it to the app when prompted
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## Usage 🎮
+
+1. Enter your tasks in the input field
+2. Click "Launch Quest" to transform them into startup-themed adventures
+3. Track your progress by checking off completed tasks
+4. Navigate between quests using the navigation buttons
+5. Create new quests at any time with the "New Quest" button
+
+## Project Structure 📁
+
+- `/src/components`: React components for the UI
+- `/src/hooks`: Custom React hooks for state management
+- `/src/utils`: Utility functions and API client
+- `/src/styles`: CSS and Tailwind configurations
+
+## Contributing 🤝
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License 📄
+
+MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author ✍️
+
+Devin Liu - [@devin-liu](https://github.com/devin-liu)
+
+---
+
+Made with ❤️ and lots of ☕
