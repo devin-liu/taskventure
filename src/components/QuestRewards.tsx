@@ -53,43 +53,29 @@ export const QuestRewards = ({
   }, [startFadeOut]);
 
   useEffect(() => {
-    let xpInterval: NodeJS.Timeout;
     let fadeTimeout: NodeJS.Timeout;
 
     if (show) {
       // Reset states when showing
       setShowReward(true);
       setIsFading(false);
-      setCurrentXP(0);
-      setIsCountingComplete(false);
-      hasAddedXP.current = false;
+      setCurrentXP(targetXP); // Set XP instantly
+      setIsCountingComplete(true);
       
-      let accumulatedXP = 0;
+      // Add XP to the global tracker only once
+      if (!hasAddedXP.current) {
+        addXP(questTitle, complexity, targetXP);
+        hasAddedXP.current = true;
+      }
       
-      xpInterval = setInterval(() => {
-        if (accumulatedXP < targetXP) {
-          accumulatedXP += 1;
-          setCurrentXP(accumulatedXP);
-        } else {
-          clearInterval(xpInterval);
-          // Add XP to the global tracker only once
-          if (!hasAddedXP.current) {
-            addXP(questTitle, complexity, targetXP);
-            hasAddedXP.current = true;
-          }
-          setIsCountingComplete(true);
-          
-          // Start fade out animation after 1.5s if not manually dismissed
-          fadeTimeout = setTimeout(() => {
-            startFadeOut();
-          }, 1500);
-        }
-      }, 30);
+      // Start fade out animation after 1.5s if not manually dismissed
+      fadeTimeout = setTimeout(() => {
+        startFadeOut();
+      }, 1500);
     }
 
     // Cleanup function
     return () => {
-      clearInterval(xpInterval);
       clearTimeout(fadeTimeout);
       setShowReward(false);
       setIsFading(false);
@@ -134,7 +120,7 @@ export const QuestRewards = ({
             </div>
             <div className="h-2 bg-amber-200/50 dark:bg-gray-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-amber-500 transition-all duration-300 ease-out"
+                className="h-full bg-amber-500 transition-[width] duration-1000 ease-out animation-once"
                 style={{ width: `${(currentXP / targetXP) * 100}%` }}
               />
             </div>
