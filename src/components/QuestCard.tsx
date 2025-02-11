@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { QuestStep } from '../utils/StepParser';
 import { QuestRewards } from './QuestRewards';
 
@@ -12,10 +12,22 @@ interface QuestCardProps {
 export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestCardProps) => {
   const progress = (completedTasks.size / quest.tasks.length) * 100;
   const [showRewards, setShowRewards] = useState(false);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
-    if (progress === 100) {
+    // Only show rewards if this isn't the initial render and progress just hit 100%
+    if (!isInitialRender.current && progress === 100) {
       setShowRewards(true);
+    }
+    
+    // After initial render, mark it as done
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+    }
+
+    // Reset rewards state when progress changes to non-100%
+    if (progress !== 100) {
+      setShowRewards(false);
     }
   }, [progress]);
 
@@ -68,7 +80,11 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestC
           </div>
         )}
       </div>
-      <QuestRewards show={showRewards} onClose={() => setShowRewards(false)} />
+      <QuestRewards 
+        show={showRewards} 
+        onClose={() => setShowRewards(false)} 
+        questTitle={quest.title}
+      />
     </div>
   );
 };
