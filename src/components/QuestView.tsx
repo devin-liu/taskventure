@@ -1,9 +1,7 @@
-import React from 'react';
 import { QuestCard } from './QuestCard';
-import type { QuestStep } from '../utils/StepParser';
 
 interface QuestViewProps {
-  quests: QuestStep[];
+  quests: any[];
   currentQuestIndex: number;
   questCompletion: { [key: string]: Set<number> };
   onTaskToggle: (questIndex: number, taskIndex: number) => void;
@@ -22,7 +20,6 @@ export const QuestView = ({
   const currentQuest = quests[currentQuestIndex];
   const isLastQuest = currentQuestIndex === quests.length - 1;
   const completedTasks = questCompletion[`quest-${currentQuestIndex}`] || new Set();
-  const progress = (completedTasks.size / currentQuest.tasks.length) * 100;
 
   // Get all quests from the same task
   const relatedQuests = quests.filter(q => q.taskId === currentQuest.taskId);
@@ -74,7 +71,6 @@ export const QuestView = ({
       {/* Current Quest */}
       <QuestCard
         quest={currentQuest}
-        index={currentQuestIndex}
         completedTasks={completedTasks}
         onTaskToggle={handleTaskToggle}
         onNext={handleNextQuest}

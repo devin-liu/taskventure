@@ -1,6 +1,6 @@
-import { QuestComplexity } from '../constants/gameConstants';
+import { QUEST_COMPLEXITY } from '../constants/gameConstants';
 
-export type QuestComplexity = keyof typeof QuestComplexity;
+export type QuestComplexity = keyof typeof QUEST_COMPLEXITY;
 
 export interface Quest {
   id: string;
@@ -10,10 +10,11 @@ export interface Quest {
   xpReward: number;
   completed?: boolean;
   currentTask?: number;
+  taskId?: string;
+  timestamp?: number;
 }
 
-export interface QuestStep {
-  id: string;
+export interface QuestStep extends Quest {
   task: string;
   completed: boolean;
 }

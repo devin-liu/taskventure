@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { QuestStep } from '../utils/StepParser';
 
 const QUESTS_STORAGE_KEY = 'taskventure_quests';
@@ -17,10 +17,10 @@ const loadInitialState = () => {
   const parsedCompletion = savedCompletion ? JSON.parse(savedCompletion) : {};
   
   // Convert the saved completion data back to Sets
-  const initialCompletion = Object.entries(parsedCompletion).reduce(
+  const initialCompletion = Object.entries(parsedCompletion).reduce<QuestCompletion>(
     (acc, [questId, completedTasks]) => ({
       ...acc,
-      [questId]: new Set(completedTasks),
+      [questId]: new Set(completedTasks as number[]),
     }),
     {}
   );

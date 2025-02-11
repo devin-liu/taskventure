@@ -53,7 +53,7 @@ export const QuestRewards = ({
   }, [startFadeOut]);
 
   useEffect(() => {
-    let fadeTimeout: NodeJS.Timeout;
+    let fadeTimeout: ReturnType<typeof setTimeout>;
 
     if (show) {
       // Reset states when showing
@@ -91,7 +91,7 @@ export const QuestRewards = ({
       className={`fixed inset-0 flex items-center justify-center z-50 bg-black/50 ${
         isFading ? 'animate-rewards-fadeout' : ''
       }`}
-      onClick={startFadeOut}
+      onClick={() => startFadeOut()}
     >
       <div 
         className="bg-parchment-50 dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full transform scale-100 animate-rewards-popup"

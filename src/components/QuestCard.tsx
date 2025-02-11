@@ -1,18 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
-import type { Quest, QuestStep } from '../types/quest';
+import type { Quest } from '../types/quest';
 import { QuestRewards } from './QuestRewards';
-import { QUEST_COMPLEXITY } from '../constants/gameConstants';
 
 interface QuestCardProps {
   quest: Quest;
-  index: number;
   completedTasks: Set<number>;
   onTaskToggle: (taskIndex: number) => void;
   onNext?: () => void;
   isLastQuest?: boolean;
 }
 
-export const QuestCard = ({ quest, index, completedTasks, onTaskToggle, onNext, isLastQuest = false }: QuestCardProps) => {
+export const QuestCard = ({ quest, completedTasks, onTaskToggle, onNext, isLastQuest = false }: QuestCardProps) => {
   const progress = (completedTasks.size / quest.tasks.length) * 100;
   const [showRewards, setShowRewards] = useState(false);
   const isInitialRender = useRef(true);

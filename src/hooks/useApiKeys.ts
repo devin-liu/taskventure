@@ -1,11 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { ApiKeys } from '../components/ApiKeyModal';
-import { getEnvVar, setEnvVar } from '../config/env';
+import { setEnvVar } from '../config/env';
+
+interface ApiKeys {
+  [key: string]: string;
+}
 
 const STORAGE_KEY = 'taskventure_api_keys';
 
 export const useApiKeys = () => {
-  const [apiKeys, setApiKeys] = useState<{ [key: string]: string }>({});
+  const [apiKeys, setApiKeys] = useState<ApiKeys>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasKeys, setHasKeys] = useState(false);
 
@@ -40,7 +43,7 @@ export const useApiKeys = () => {
     setIsModalOpen(false);
   }, []);
 
-  const handleSaveKeys = useCallback((newKeys: { [key: string]: string }) => {
+  const handleSaveKeys = useCallback((newKeys: ApiKeys) => {
     try {
       // Save to localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newKeys));

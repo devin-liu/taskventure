@@ -1,10 +1,8 @@
-import React from 'react';
-
 interface QuestInputProps {
   input: string;
   setInput: (value: string) => void;
   onSubmit: () => void;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 export const QuestInput = ({ input, setInput, onSubmit, isLoading }: QuestInputProps) => {

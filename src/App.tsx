@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { QuestCard } from './components/QuestCard'
 import { QuestInput } from './components/QuestInput'
 import { QuestView } from './components/QuestView'
 import { ApiKeyModal } from './components/ApiKeyModal'
@@ -10,9 +9,7 @@ import { generateGameQuests } from './utils/OpenRouterClient'
 import { useApiKeys } from './hooks/useApiKeys'
 import { useQuestStorage } from './hooks/useQuestStorage'
 import { XPProvider } from './hooks/useXPTracker.tsx'
-import type { QuestStep } from './utils/StepParser'
 
-const STORAGE_KEY = 'taskventure_api_keys';
 const CURRENT_QUEST_INDEX_KEY = 'taskventure_current_quest_index';
 
 interface ToastState {
@@ -22,11 +19,11 @@ interface ToastState {
 
 type ViewState = 'input' | 'quest';
 
-function App() {
+export default function App() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [toast, setToast] = useState<ToastState | null>(null)
-  const { apiKeys, hasKeys, isModalOpen, openModal, closeModal, handleSaveKeys } = useApiKeys()
+  const { hasKeys, isModalOpen, openModal, closeModal, handleSaveKeys } = useApiKeys()
   const { quests, setQuests, questCompletion, saveQuestCompletion } = useQuestStorage()
   
   // Initialize view state based on whether there are existing quests
@@ -157,5 +154,3 @@ function App() {
     </XPProvider>
   )
 }
-
-export default App
