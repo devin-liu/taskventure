@@ -104,7 +104,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-parchment-100 dark:bg-gray-900">
+    <div className="min-h-screen w-full bg-parchment-100 dark:bg-gray-900">
       {/* App Header */}
       <div className="bg-gradient-to-b from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 py-4 px-4 shadow-md border-b-4 border-amber-700/50">
         <div className="max-w-3xl mx-auto">
