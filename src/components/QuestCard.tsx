@@ -78,7 +78,8 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle, onNext, 
           {quest.tasks.map((task, taskIndex) => (
             <li
               key={taskIndex}
-              className="flex items-start gap-3 group hover:bg-amber-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors"
+              onClick={() => onTaskToggle(taskIndex)}
+              className="flex items-start gap-3 group hover:bg-amber-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors cursor-pointer"
             >
               <input
                 type="checkbox"
