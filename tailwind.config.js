@@ -11,10 +11,13 @@ export default {
       },
       fontFamily: {
         'quest': ['ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        'pixel': ['"Press Start 2P"', 'cursive'],
       },
       animation: {
         'quest-complete': 'questComplete 2s infinite',
         'badge-glow': 'badgeGlow 2s infinite',
+        'logo-sparkle': 'logoSparkle 3s infinite',
+        'logo-float': 'logoFloat 2s infinite',
       },
       keyframes: {
         questComplete: {
@@ -22,8 +25,16 @@ export default {
           '50%': { transform: 'scale(1.05)', opacity: '1' },
         },
         badgeGlow: {
-          '0%, 100%': { opacity: '0.5' },
-          '50%': { opacity: '0.7' },
+          '0%, 100%': { filter: 'brightness(1)' },
+          '50%': { filter: 'brightness(1.2)' },
+        },
+        logoSparkle: {
+          '0%, 90%, 100%': { opacity: '0' },
+          '95%': { opacity: '1' },
+        },
+        logoFloat: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-4px)' },
         },
       },
       colors: {
