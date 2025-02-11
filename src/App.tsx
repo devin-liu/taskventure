@@ -10,6 +10,7 @@ import { generateGameQuests } from './utils/OpenRouterClient'
 import { useApiKeys } from './hooks/useApiKeys'
 import { useQuestStorage } from './hooks/useQuestStorage'
 import { XPProvider } from './hooks/useXPTracker.tsx'
+import { Analytics } from '@vercel/analytics/react'
 
 const CURRENT_QUEST_INDEX_KEY = 'taskventure_current_quest_index';
 
@@ -164,6 +165,7 @@ export default function App() {
           />
         )}
       </div>
+      <Analytics />
     </XPProvider>
   )
 }
