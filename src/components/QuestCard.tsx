@@ -25,59 +25,27 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle }: QuestC
       </div>
 
       <div className="p-4 border-b border-amber-100 dark:border-gray-700">
-        <h4 className="font-quest text-xl text-amber-900 dark:text-amber-400">
+        <h4 className="font-quest text-2xl text-amber-900 dark:text-amber-400 leading-tight">
           {quest.title}
         </h4>
       </div>
 
       <div className="p-4">
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {quest.tasks.map((task, taskIndex) => (
-            <li 
+            <li
               key={taskIndex}
-              onClick={() => onTaskToggle(taskIndex)}
-              className="flex items-start space-x-3 group cursor-pointer"
+              className="flex items-start gap-3 group hover:bg-amber-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors"
             >
-              <div 
-                className={`
-                  flex-shrink-0 w-4 h-4 mt-1 
-                  flex items-center justify-center
-                  border border-amber-400/50 rounded
-                  ${completedTasks.has(taskIndex)
-                    ? 'bg-amber-500 border-amber-600'
-                    : 'group-hover:border-amber-500'
-                  }
-                  transition-colors duration-200
-                `}
-              >
-                {completedTasks.has(taskIndex) && (
-                  <div className="w-2.5 h-2.5 flex items-center justify-center">
-                    <svg 
-                      className="w-full h-full text-white"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2 6L4.5 9L10 3" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-
-              <span 
-                className={`
-                  text-base
-                  ${completedTasks.has(taskIndex)
-                    ? 'text-amber-800/50 dark:text-amber-500/50 line-through'
-                    : 'text-amber-900 dark:text-amber-100'
-                  }
-                  group-hover:text-amber-700 dark:group-hover:text-amber-300
-                  transition-colors duration-200
-                `}
-              >
+              <input
+                type="checkbox"
+                checked={completedTasks.has(taskIndex)}
+                onChange={() => onTaskToggle(taskIndex)}
+                className="mt-1 h-4 w-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+              />
+              <span className={`text-amber-900 dark:text-amber-100 ${
+                completedTasks.has(taskIndex) ? 'line-through opacity-50' : ''
+              }`}>
                 {task}
               </span>
             </li>
