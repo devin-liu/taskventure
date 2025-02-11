@@ -2,6 +2,8 @@
 
 Break down programming tasks into RPG-style quests, designed specifically for developers with ADHD. TaskVenture transforms overwhelming projects into manageable, rewarding adventures.
 
+https://github.com/user-attachments/assets/a47a73e3-0de6-48e8-bb63-bb48de60046a
+
 ## Why TaskVenture? 
 
 - **Reduces Starting Friction**: Breaks large tasks into clear, actionable mini-quests
