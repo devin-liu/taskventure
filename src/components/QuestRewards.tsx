@@ -1,21 +1,32 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useXPTracker } from '../hooks/useXPTracker.tsx';
+import { useXPTracker } from '../hooks/useXPTracker';
+import { QuestComplexity } from '../constants/gameConstants';
 
 interface QuestRewardsProps {
   show: boolean;
   onClose: () => void;
   questTitle: string;
+  complexity: QuestComplexity;
+  xpReward: number;
   onNext?: () => void;
   isLastQuest?: boolean;
 }
 
-export const QuestRewards = ({ show, onClose, questTitle, onNext, isLastQuest = false }: QuestRewardsProps) => {
+export const QuestRewards = ({ 
+  show, 
+  onClose, 
+  questTitle, 
+  complexity,
+  xpReward,
+  onNext, 
+  isLastQuest = false 
+}: QuestRewardsProps) => {
   const [showReward, setShowReward] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const [isCountingComplete, setIsCountingComplete] = useState(false);
   const { addXP } = useXPTracker();
   const [currentXP, setCurrentXP] = useState(0);
-  const targetXP = Math.floor(Math.random() * 50) + 50; // Random XP between 50-100
+  const targetXP = xpReward;
   const hasAddedXP = useRef(false);
 
   const startFadeOut = useCallback((force: boolean = false) => {
@@ -63,7 +74,7 @@ export const QuestRewards = ({ show, onClose, questTitle, onNext, isLastQuest = 
           clearInterval(xpInterval);
           // Add XP to the global tracker only once
           if (!hasAddedXP.current) {
-            addXP(questTitle, targetXP);
+            addXP(questTitle, complexity, targetXP);
             hasAddedXP.current = true;
           }
           setIsCountingComplete(true);
@@ -85,79 +96,64 @@ export const QuestRewards = ({ show, onClose, questTitle, onNext, isLastQuest = 
       setCurrentXP(0);
       setIsCountingComplete(false);
     };
-  }, [show, targetXP, addXP, questTitle, startFadeOut]);
+  }, [show, targetXP, addXP, questTitle, complexity, startFadeOut]);
 
   if (!showReward) return null;
 
   return (
-    // Add onClick handler to the overlay
     <div 
       className={`fixed inset-0 flex items-center justify-center z-50 bg-black/50 ${
         isFading ? 'animate-rewards-fadeout' : ''
       }`}
       onClick={startFadeOut}
     >
-      {/* Add onClick with stopPropagation to prevent card clicks from closing */}
       <div 
-        className={`bg-parchment-50 dark:bg-gray-800 p-6 rounded-lg shadow-xl transform ${
-          isFading ? '' : 'animate-rewards-popup'
-        }`}
+        className="bg-parchment-50 dark:bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full transform scale-100 animate-rewards-popup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-center">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="font-quest text-2xl text-amber-900 dark:text-amber-400">
-              Quest Rewards!
-            </h3>
-            <button
-              onClick={() => startFadeOut(true)} // Force close on button click
-              className="text-amber-900/50 dark:text-amber-400/50 hover:text-amber-900 dark:hover:text-amber-400 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5"
-              aria-label="Close rewards"
-            >
-              ✕
-            </button>
+        <h2 className="text-2xl font-quest text-amber-900 dark:text-amber-400 mb-6 text-center">
+          Quest Complete!
+        </h2>
+        
+        <div className="text-center mb-8">
+          <div className="text-lg font-quest text-amber-900 dark:text-amber-400">
+            {questTitle}
           </div>
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 animate-spin-slow flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-parchment-50 dark:bg-gray-800 flex items-center justify-center">
-                  <span className="font-quest text-3xl text-amber-900 dark:text-amber-400">
-                    {currentXP}
-                  </span>
-                </div>
-              </div>
-              <span className="absolute -top-2 -right-2 bg-amber-500 text-black px-2 py-1 rounded-full text-sm font-quest animate-bounce">
-                XP
-              </span>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-amber-900/70 dark:text-amber-400/70 font-medium mb-1">
-                Quest Complete:
-              </div>
-              <div className="text-amber-900 dark:text-amber-400 font-quest">
-                {questTitle}
-              </div>
-            </div>
-            {isCountingComplete && (
-              <div className="flex flex-col items-center gap-3">
-                {!isLastQuest && onNext && (
-                  <button
-                    onClick={() => {
-                      onNext();
-                      startFadeOut(true); // Force close on next quest
-                    }}
-                    className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black px-6 py-2 rounded-full text-sm font-quest hover:from-amber-600 hover:via-yellow-600 hover:to-amber-600 transition-colors duration-200"
-                  >
-                    Continue to Next Quest
-                  </button>
-                )}
-                <div className="text-sm text-amber-900/70 dark:text-amber-400/70">
-                  {isLastQuest ? "You've completed all quests!" : "Press ESC to close"}
-                </div>
-              </div>
-            )}
+          <div className="text-sm text-amber-900/70 dark:text-amber-400/70 mt-1">
+            {complexity} Difficulty
           </div>
         </div>
+
+        <div className="space-y-6">
+          <div className="bg-amber-500/10 p-4 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-quest text-amber-900 dark:text-amber-400">Experience Gained:</span>
+              <span className="font-quest text-amber-900 dark:text-amber-400">
+                +{currentXP} XP
+              </span>
+            </div>
+            <div className="h-2 bg-amber-200/50 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-amber-500 transition-all duration-300 ease-out"
+                style={{ width: `${(currentXP / targetXP) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {isCountingComplete && !isLastQuest && (
+          <button
+            onClick={() => {
+              if (onNext) {
+                startFadeOut();
+                setTimeout(onNext, 500);
+              }
+            }}
+            className="mt-6 w-full py-2 px-4 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-quest transition-colors"
+          >
+            Next Quest
+          </button>
+        )}
       </div>
     </div>
   );

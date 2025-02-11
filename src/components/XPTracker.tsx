@@ -3,7 +3,7 @@ import { useXPTracker } from '../hooks/useXPTracker.tsx';
 
 export const XPTracker = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { totalXP, currentLevel, xpHistory } = useXPTracker();
+  const { totalXP, currentLevel, xpHistory, xpToNextLevel, percentToNextLevel } = useXPTracker();
 
   return (
     <>
@@ -14,7 +14,11 @@ export const XPTracker = () => {
       >
         <div className="flex flex-col items-end">
           <span className="text-black font-quest text-sm">Level {currentLevel}</span>
-          <span className="text-black/70 text-xs">{totalXP} XP</span>
+          <div className="flex items-center gap-1">
+            <span className="text-black/70 text-xs">{totalXP.toLocaleString()} XP</span>
+            <span className="text-black/50 text-xs">•</span>
+            <span className="text-black/70 text-xs">{percentToNextLevel}%</span>
+          </div>
         </div>
         <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
           <span className="font-quest text-black">XP</span>
@@ -27,7 +31,7 @@ export const XPTracker = () => {
           <div className="bg-parchment-50 dark:bg-gray-800 w-full max-w-2xl max-h-[80vh] rounded-lg shadow-xl overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-4 flex justify-between items-center">
-              <h2 className="font-quest text-2xl text-black">Adventure Log</h2>
+              <h2 className="font-quest text-2xl text-black">Adventure Stats</h2>
               <button 
                 onClick={() => setIsOpen(false)}
                 className="text-black/70 hover:text-black"
@@ -48,13 +52,21 @@ export const XPTracker = () => {
                 <div className="flex-1">
                   <h3 className="font-quest text-xl text-amber-900 dark:text-amber-400">Total XP</h3>
                   <div className="text-4xl font-quest text-amber-900 dark:text-amber-400">
-                    {totalXP}
+                    {totalXP.toLocaleString()}
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-quest text-xl text-amber-900 dark:text-amber-400">Next Level</h3>
-                  <div className="text-sm text-amber-900/70 dark:text-amber-400/70">
-                    {(Math.pow(currentLevel, 2) * 100) - totalXP} XP needed
+                  <h3 className="font-quest text-xl text-amber-900 dark:text-amber-400">Progress</h3>
+                  <div className="mt-2">
+                    <div className="h-4 bg-amber-200/50 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-amber-500 transition-all duration-300 ease-out"
+                        style={{ width: `${percentToNextLevel}%` }}
+                      />
+                    </div>
+                    <div className="text-sm text-amber-900/70 dark:text-amber-400/70 mt-1">
+                      {xpToNextLevel.toLocaleString()} XP to level {currentLevel < 99 ? currentLevel + 1 : 'MAX'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -79,12 +91,12 @@ export const XPTracker = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-amber-900 dark:text-amber-400">
-                        Level {entry.level}
+                      <div className="text-amber-900/70 dark:text-amber-400/70 text-sm">
+                        {entry.complexity}
                       </div>
                       <div className="bg-amber-500/10 px-3 py-1 rounded-full">
                         <span className="font-quest text-amber-900 dark:text-amber-400">
-                          +{entry.xpGained} XP
+                          +{entry.xpGained.toLocaleString()} XP
                         </span>
                       </div>
                     </div>

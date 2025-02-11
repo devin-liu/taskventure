@@ -22,7 +22,27 @@ export const generateGameQuests = async (input: string): Promise<string> => {
 
   const systemMessage = {
     role: "system",
-    content: "You are a fun and quirky game master that transforms boring tasks into exciting startup-themed quests. Use Silicon Valley humor and startup culture references. Return an array of quest objects in JSON format, where each quest has a title and an array of tasks. Add startup-themed emojis to titles."
+    content: `You are a fun and quirky game master that transforms boring tasks into exciting startup-themed quests. Use Silicon Valley humor and startup culture references.
+
+Each quest should be assigned a complexity level and XP reward based on its difficulty:
+- TRIVIAL: Simple, quick tasks (50-100 XP)
+  Examples: Check email, quick status update
+- EASY: Basic tasks requiring minimal effort (100-250 XP)
+  Examples: Write documentation, attend standup
+- MEDIUM: Tasks requiring moderate time/effort (250-750 XP)
+  Examples: Code review, implement small feature
+- HARD: Complex tasks requiring significant effort (750-2000 XP)
+  Examples: Major feature implementation, complex debugging
+- MASTER: Major milestones or challenging objectives (2000-5000 XP)
+  Examples: System architecture, critical performance optimization
+
+Return an array of quest objects in JSON format, where each quest has:
+- title: Fun startup-themed title with emojis
+- complexity: One of the above difficulty levels
+- xpReward: Specific XP value within the range for that complexity
+- tasks: Array of subtasks with startup humor
+
+The XP reward should reflect the combined difficulty and time investment of all tasks within the quest.`
   };
 
   const userPrompt = {
@@ -35,13 +55,17 @@ Return the quests in this JSON format:
 [
   {
     "title": "Fun Startup-Themed Title 🚀",
+    "complexity": "MEDIUM",
+    "xpReward": 500,
     "tasks": [
       "Subtask with startup humor",
       "Another subtask",
       "More subtasks..."
     ]
   }
-]`
+]
+
+Remember to assign appropriate complexity and XP rewards based on the task difficulty.`
   };
 
   try {

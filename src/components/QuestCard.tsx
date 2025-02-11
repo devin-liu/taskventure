@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import type { QuestStep } from '../utils/StepParser';
+import type { Quest, QuestStep } from '../types/quest';
 import { QuestRewards } from './QuestRewards';
+import { QUEST_COMPLEXITY } from '../constants/gameConstants';
 
 interface QuestCardProps {
-  quest: QuestStep;
+  quest: Quest;
   index: number;
   completedTasks: Set<number>;
   onTaskToggle: (taskIndex: number) => void;
@@ -37,25 +38,42 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle, onNext, 
   }, [progress]);
 
   return (
-    <div className="relative bg-parchment-50 dark:bg-gray-800 rounded-lg overflow-hidden border border-amber-200/50 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
-      <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 py-2 px-4 border-b border-amber-600/50">
-        <div className="flex items-center justify-between">
-          <h3 className="font-quest text-black text-lg">
-            Quest {index + 1}
-          </h3>
-          <span className="text-xs font-medium bg-black/10 rounded-full px-3 py-1">
-            {Math.round(progress)}% Complete
+    <div className="bg-parchment-50 dark:bg-gray-800 rounded-lg p-6 shadow-lg relative overflow-hidden">
+      {/* Progress bar */}
+      <div className="absolute top-0 left-0 h-1 bg-amber-200/50 dark:bg-gray-700 w-full">
+        <div 
+          className="h-full bg-amber-500 transition-all duration-300 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Quest header */}
+      <div className="mb-4">
+        <h3 className="text-xl font-quest text-amber-900 dark:text-amber-400">
+          {quest.title}
+        </h3>
+        <div className="flex items-center gap-2 mt-1">
+          <span className={`
+            px-2 py-0.5 rounded text-xs font-medium
+            ${quest.complexity === 'TRIVIAL' ? 'bg-gray-100 text-gray-700' :
+              quest.complexity === 'EASY' ? 'bg-green-100 text-green-700' :
+              quest.complexity === 'MEDIUM' ? 'bg-blue-100 text-blue-700' :
+              quest.complexity === 'HARD' ? 'bg-orange-100 text-orange-700' :
+              'bg-red-100 text-red-700'}
+          `}>
+            {quest.complexity}
+          </span>
+          <span className="text-sm text-amber-900/70 dark:text-amber-400/70">
+            {completedTasks.size}/{quest.tasks.length} tasks
+          </span>
+          <span className="ml-auto px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 flex items-center gap-1">
+            <span className="font-quest">+{quest.xpReward.toLocaleString()}</span>
+            <span className="opacity-75">XP</span>
           </span>
         </div>
       </div>
 
       <div className="p-4 border-b border-amber-100 dark:border-gray-700">
-        <h4 className="font-quest text-2xl text-amber-900 dark:text-amber-400 leading-tight">
-          {quest.title}
-        </h4>
-      </div>
-
-      <div className="p-4">
         <ul className="space-y-4">
           {quest.tasks.map((task, taskIndex) => (
             <li
@@ -85,13 +103,19 @@ export const QuestCard = ({ quest, index, completedTasks, onTaskToggle, onNext, 
           </div>
         )}
       </div>
-      <QuestRewards 
-        show={showRewards} 
-        onClose={() => setShowRewards(false)} 
-        questTitle={quest.title}
-        onNext={onNext}
-        isLastQuest={isLastQuest}
-      />
+
+      {/* Quest rewards modal */}
+      {showRewards && (
+        <QuestRewards
+          show={showRewards}
+          onClose={() => setShowRewards(false)}
+          questTitle={quest.title}
+          complexity={quest.complexity}
+          xpReward={quest.xpReward}
+          onNext={onNext}
+          isLastQuest={isLastQuest}
+        />
+      )}
     </div>
   );
 };
